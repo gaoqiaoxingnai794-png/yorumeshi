@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8f6ef">
+  <title>YORUMESHI｜今日の夕飯、もう悩まない。</title>
+  <meta name="description" content="家族にぴったりの夕飯献立と買い物リストを作ろう。">
+
+  <style>
+    :root {
+      --green: #687b61;
+      --green-dark: #4d6148;
+      --cream: #f8f6ef;
+      --paper: #fffdf8;
+      --text: #453b30;
+      --muted: #887f73;
+      --line: #e9e3d8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.8;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1080px, 92%);
+      margin: auto;
+    }
+
+    header {
+      padding: 16px 0;
+      background: rgba(255, 253, 248, .92);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: Georgia, serif;
+      font-size: 25px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: var(--green-dark);
+    }
+
+    .logo span {
+      display: block;
+      font-family: sans-serif;
+      font-size: 9px;
+      font-weight: normal;
+      letter-spacing: 2px;
+      line-height: 1.4;
+    }
+
+    .nav-link {
+      color: var(--green-dark);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 76px 0 84px;
+      background:
+        linear-gradient(90deg,
+          rgba(248, 246, 239, .98) 0%,
+          rgba(248, 246, 239, .92) 42%,
+          rgba(248, 246, 239, .08) 100%),
+        url("https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1600&q=85") center 52% / cover;
+    }
+
+    .hero-content {
+      max-width: 570px;
+    }
+
+    .eyebrow {
+      color: var(--green-dark);
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 16px 0;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.55;
+      font-weight: 500;
+      letter-spacing: .04em;
+    }
+
+    .hero p {
+      color: #675d51;
+      font-size: 15px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      background: rgba(255, 253, 248, .9);
+      border: 1px solid rgba(104, 123, 97, .18);
+      border-radius: 30px;
+      font-size: 12px;
+    }
+
+    .section {
+      padding: 52px 0;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-family: "Yu Mincho", serif;
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 500;
+    }
+
+    .section-lead {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .planner {
+      display: grid;
+      grid-template-columns: 1fr .9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 28px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 8px 30px rgba(74, 63, 48, .045);
+    }
+
+    .field {
+      margin-bottom: 21px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      display: block;
+      width: 100%;
+      padding: 13px 14px;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid #e5ded2;
+      border-radius: 10px;
+      outline-color: var(--green);
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 78px;
+      resize: vertical;
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .primary-btn {
+      display: block;
+      width: 100%;
+      padding: 15px 18px;
+      color: #fff;
+      background: var(--green);
+      border: none;
+      border-radius: 40px;
+      font-weight: 700;
+      transition: background .2s, transform .2s;
+    }
+
+    .primary-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .preview {
+      position: sticky;
+      top: 18px;
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .preview-head h3 {
+      margin: 0;
+      font-family: "Yu Mincho", serif;
+      font-size: 21px;
+    }
+
+    .tag {
+      padding: 4px 9px;
+      color: var(--green-dark);
+      background: #edf0e6;
+      border-radius: 20px;
+      font-size: 10px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .food-img {
+      width: 76px;
+      height: 68px;
+      flex-shrink: 0;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #eee8dc;
+    }
+
+    .menu-day {
+      color: var(--green);
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .menu-name {
+      margin: 2px 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .menu-detail {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      padding: 22px 16px;
+      background: #f0eee5;
+      border-radius: 18px;
+    }
+
+    .feature-icon {
+      font-size: 25px;
+    }
+
+    .feature h3 {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .recipe {
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .recipe img {
+      display: block;
+      width: 100%;
+      height: 145px;
+      object-fit: cover;
+    }
+
+    .recipe-body {
+      padding: 12px;
+    }
+
+    .recipe h3 {
+      margin: 0 0 5px;
+      font-size: 14px;
+    }
+
+    .recipe p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .shopping {
+      padding: 28px;
+      background: #e9ecdf;
+      border-radius: 22px;
+    }
+
+    .shopping h2 {
+      margin-top: 0;
+      font-family: "Yu Mincho", serif;
+      font-weight: 500;
+    }
+
+    .shopping-groups {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .shopping-group {
+      padding: 16px;
+      background: rgba(255, 253, 248, .8);
+      border-radius: 14px;
+    }
+
+    .shopping-group h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+
+    .check-item input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--green);
+    }
+
+    .check-item:has(input:checked) {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .notice {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 30px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .status {
+      margin: 12px 0 0;
+      color: var(--green-dark);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding: 52px 0 56px;
+        background:
+          linear-gradient(90deg,
+            rgba(248, 246, 239, .97),
+            rgba(248, 246, 239, .77)),
+          url("https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80") center / cover;
+      }
+
+      .hero-content {
+        max-width: 100%;
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .pill {
+        font-size: 11px;
+      }
+
+      .section {
+        padding: 36px 0;
+      }
+
+      .planner {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .preview {
+        position: static;
+      }
+
+      .features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .recipe-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .recipe img {
+        height: 125px;
+      }
+
+      .shopping {
+        padding: 20px;
+      }
+
+      .shopping-groups {
+        grid-template-columns: 1fr;
+      }
+
+      .section-lead {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .container {
+        width: 94%;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .food-img {
+        width: 64px;
+        height: 62px;
+      }
+
+      .menu-name {
+        font-size: 12px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        YORUMESHI
+        <span>AI DINNER PLANNER</span>
+      </div>
+      <a class="nav-link" href="#planner">献立をつくる ↓</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="eyebrow">A LITTLE MORE EASE IN EVERYDAY LIFE</div>
+        <h1>今日の夕飯、<br>もう悩まない。</h1>
+        <p>
+          家族にぴったりの献立を、AIがご提案。<br>
+          1週間分の夕飯も、買い物リストも。<br>
+          毎日のごはんづくりを、もっと気楽に。
+        </p>
+
+        <div class="pill-row">
+          <span class="pill">📅 1週間分の献立</span>
+          <span class="pill">🛒 買い物リスト</span>
+          <span class="pill">🌿 苦手な食材に配慮</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="planner">
+      <div class="container">
+        <h2 class="section-title">さっそく献立をつくってみよう</h2>
+        <p class="section-lead">
+          いくつか入力するだけ。毎日の献立づくりをお手伝いします。
+        </p>
+
+        <div class="planner">
+          <form class="panel" id="mealForm">
+            <div class="field">
+              <label for="family">👨‍👩‍👧‍👦 家族構成</label>
+              <select id="family">
+                <option>大人2人・子ども2人</option>
+
+                <option>大人2人</option>
+                <option>大人1人・子ども1人</option>
+                <option>大人2人・子ども1人</option>
+                <option>大人2人・子ども3人</option>
+                <option>ひとり暮らし</option>
+                <option>その他</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="allergies">🌿 苦手な食材・避けたい食材</label>
+              <input id="allergies" placeholder="例：なす、きのこ、辛いもの">
+            </div>
+
+            <div class="field">
+              <label for="ingredients">🥕 冷蔵庫にある食材</label>
+              <textarea id="ingredients" placeholder="例：鶏肉、キャベツ、卵、豆腐"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="preference">🍲 献立の希望</label>
+              <select id="preference">
+                <option>おまかせ</option>
+                <option>時短メニュー</option>
+                <option>子どもが喜ぶメニュー</option>
+                <option>野菜たっぷり</option>
+                <option>節約メニュー</option>
+                <option>あたたかいメニュー</option>
+              </select>
+            </div>
+
+            <button class="primary-btn" type="submit">
+              この内容で献立を作成する →
+            </button>
+            <p class="status" id="status" aria-live="polite"></p>
+          </form>
+
+          <div class="panel preview" aria-live="polite">
+            <div class="preview-head">
+              <h3>1週間の献立</h3>
+              <span class="tag" id="menuTag">サンプル</span>
+            </div>
+            <div id="menuList"></div>
+            <p class="notice">
+              ※現在はデザイン確認用のサンプルです。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">こんなことができます</h2>
+        <p class="section-lead">夕飯づくりの負担を、少しずつ軽く。</p>
+        <div class="features">
+          <article class="feature">
+            <div class="feature-icon">📅</div>
+            <h3>1週間分の献立</h3>
+            <p>夕飯をまとめて計画。</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">🛒</div>
+            <h3>買い物リスト</h3>
+            <p>必要な食材を整理。</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">🏡</div>
+            <h3>家族に合わせて</h3>
+            <p>家族構成や希望を考慮。</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">🥬</div>
+            <h3>食材を有効活用</h3>
+            <p>冷蔵庫の食材を活用。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">レシピのイメージ</h2>
+        <p class="section-lead">毎日の食卓に取り入れやすい家庭料理。</p>
+        <div class="recipe-grid">
+          <article class="recipe">
+            <img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=500&q=80"
+              alt="肉料理">
+            <div class="recipe-body">
+              <h3>豚肉の生姜焼き</h3>
+              <p>約20分 ・ 2〜3人分</p>
+            </div>
+          </article>
+          <article class="recipe">
+            <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=500&q=80"
+              alt="魚料理">
+            <div class="recipe-body">
+              <h3>鮭の焼き物</h3>
+              <p>約25分 ・ 2〜3人分</p>
+            </div>
+          </article>
+          <article class="recipe">
+            <img src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=500&q=80"
+              alt="あたたかい料理">
+            <div class="recipe-body">
+              <h3>クリーム煮</h3>
+              <p>約30分 ・ 2〜3人分</p>
+            </div>
+          </article>
+          <article class="recipe">
+            <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=500&q=80"
+              alt="麺料理">
+            <div class="recipe-body">
+              <h3>野菜たっぷりパスタ</h3>
+              <p>約15分 ・ 2〜3人分</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="shopping">
+          <h2>🛒 買い物リスト</h2>
+          <p class="section-lead">必要な食材をチェックしよう。</p>
+          <div class="shopping-groups" id="shoppingList"></div>
+          <p class="notice">※現在はサンプル表示です。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    YORUMESHI · 今日の夕飯を、もっと気楽に。
+  </footer>
+
+  <script>
+    const sampleMenus = [
+      ["月", "豚肉の生姜焼き", "サラダ・みそ汁"],
+      ["火", "鮭のちゃんちゃん焼き", "冷ややっこ・ごはん"],
+      ["水", "鶏肉ときのこのクリーム煮", "サラダ・スープ"],
+      ["木", "野菜たっぷり焼きそば", "わかめスープ"],
+      ["金", "豆腐ハンバーグ", "温野菜・みそ汁"],
+      ["土", "鶏肉の照り焼き", "キャベツ・ごはん"],
+      ["日", "野菜カレー", "サラダ"]
+    ];
+
+    const menuPhotos = [
+      "photo-1529042410759-befb1204b468",
+      "photo-1467003909585-2f8a72700288",
+      "photo-1476124369491-e7addf5db371",
+      "photo-1473093295043-cdd812d0e601",
+      "photo-1547592180-85f173990554",
+      "photo-1532550907401-a500c9a57435",
+      "photo-1547592180-85f173990554"
+    ];
+
+    function renderMenus(menus) {
+      const list = document.getElementById("menuList");
+      list.replaceChildren();
+
+      menus.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "menu-item";
+
+        const img = document.createElement("img");
+        img.className = "food-img";
+        img.alt = item[1];
+        img.loading = "lazy";
+        img.src = `https://images.unsplash.com/${menuPhotos[index % menuPhotos.length]}?auto=format&fit=crop&w=200&q=75`;
+
+        const details = document.createElement("div");
+        const day = document.createElement("div");
+        day.className = "menu-day";
+        day.textContent = item[0] + "曜日";
+
+        const name = document.createElement("div");
+        name.className = "menu-name";
+        name.textContent = item[1];
+
+        const side = document.createElement("div");
+        side.className = "menu-detail";
+        side.textContent = item[2];
+
+        details.append(day, name, side);
+        row.append(img, details);
+        list.append(row);
+      });
+    }
+
+    function renderShopping() {
+      const groups = {
+        "野菜・きのこ": ["キャベツ", "玉ねぎ", "にんじん", "ほうれん草", "きのこ"],
+        "肉・魚": ["豚肉", "鶏肉", "鮭", "ひき肉"],
+        "その他": ["卵", "豆腐", "牛乳", "みそ"]
+      };
+
+      const root = document.getElementById("shoppingList");
+      root.replaceChildren();
+
+      Object.entries(groups).forEach(([title, items]) => {
+        const section = document.createElement("div");
+        section.className = "shopping-group";
+
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+        section.append(heading);
+
+        items.forEach(item => {
+          const label = document.createElement("label");
+          label.className = "check-item";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+
+          const text = document.createElement("span");
+          text.textContent = item;
+
+          label.append(checkbox, text);
+          section.append(label);
+        });
+
+        root.append(section);
+      });
+    }
+
+    document.getElementById("mealForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      renderMenus(sampleMenus);
+      document.getElementById("menuTag").textContent = "サンプル";
+      document.getElementById("status").textContent =
+        "表示できました！ AIとの接続は次の工程で行います。";
+
+      document.getElementById("menuList").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+
+    renderMenus(sampleMenus);
+    renderShopping();
+  </script>
+</body>
+
+</html>
