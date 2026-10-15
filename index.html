@@ -782,11 +782,52 @@
     document.getElementById("mealForm").addEventListener("submit", event => {
       event.preventDefault();
 
-      renderMenus(sampleMenus);
-      document.getElementById("menuTag").textContent = "更新テスト
-    ";
-      document.getElementById("status").textContent =
-        "表示できました！ AIとの接続は次の工程で行います。";
+      const family = document.getElementById("family").value;
+      const allergies = document.getElementById("allergies").value.trim();
+      const ingredients = document.getElementById("ingredients").value.trim();
+      const preference = document.getElementById("preference").value;
+
+      const status = document.getElementById("status");
+      const menuTag = document.getElementById("menuTag");
+
+      const menuList = sampleMenus.map(item => [...item]);
+
+      if (preference === "時短メニュー") {
+        menuList[0][1] = "豚肉と野菜の簡単炒め";
+        menuList[1][1] = "鮭のフライパン蒸し";
+        menuList[2][1] = "鶏肉の簡単照り焼き";
+      } else if (preference === "子どもが喜ぶメニュー") {
+        menuList[0][1] = "甘口ポークカレー";
+        menuList[1][1] = "チキンハンバーグ";
+        menuList[2][1] = "ミートソースパスタ";
+      } else if (preference === "野菜たっぷり") {
+        menuList[0][1] = "野菜たっぷり豚しゃぶ";
+        menuList[1][1] = "鮭と野菜の蒸し焼き";
+        menuList[2][1] = "具だくさんスープと鶏肉";
+      } else if (preference === "節約メニュー") {
+        menuList[0][1] = "豆腐入り豚そぼろ丼";
+        menuList[1][1] = "もやしと卵の炒め物";
+        menuList[2][1] = "鶏むね肉の甘酢焼き";
+      }
+
+      const excluded = allergies
+        .split(/[、,，\s]+/)
+        .filter(Boolean);
+
+      const allNames = menuList.map(item => item[1]).join(" ");
+
+      if (excluded.some(food => allNames.includes(food))) {
+        menuList[0][1] = "野菜と鶏肉の炒め物";
+      }
+
+      renderMenus(menuList);
+      renderShopping();
+
+      menuTag.textContent = "献立プラン";
+      status.textContent =
+        `献立を表示しました（${family}）。` +
+        (ingredients ? ` 活用したい食材：${ingredients}。` : "") +
+        " ※これはサンプルをもとにしたプランです。AI生成ではありません。";
 
       document.getElementById("menuList").scrollIntoView({
         behavior: "smooth",
